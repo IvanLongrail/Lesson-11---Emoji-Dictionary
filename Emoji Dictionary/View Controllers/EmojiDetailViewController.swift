@@ -21,6 +21,10 @@ class EmojiDetailViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         updateUI()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(EmojiDetailViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(EmojiDetailViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
     }
     
     func areFieldsReady() -> Bool {
@@ -72,4 +76,24 @@ extension EmojiDetailViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+}
+
+
+extension EmojiDetailViewController {
+@objc func keyboardWillShow(notification: NSNotification) {
+    if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if self.view.frame.origin.y == 0{
+            self.view.frame.origin.y -= keyboardSize.height
+        }
+    }
+}
+
+@objc func keyboardWillHide(notification: NSNotification) {
+    if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        
+            self.view.frame.origin.y += keyboardSize.height
+        
+    }
+}
+
 }
