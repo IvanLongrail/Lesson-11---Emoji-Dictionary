@@ -14,6 +14,7 @@ class EmojiDetailViewController: UIViewController {
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var usageField: UITextField!
+    @IBOutlet weak var scrollViewBottomLayout: NSLayoutConstraint!
     
     var emoji = Emoji()
     
@@ -80,20 +81,15 @@ extension EmojiDetailViewController: UITextFieldDelegate {
 
 
 extension EmojiDetailViewController {
-@objc func keyboardWillShow(notification: NSNotification) {
-    if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-        if self.view.frame.origin.y == 0{
-            self.view.frame.origin.y -= keyboardSize.height
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            scrollViewBottomLayout.constant = keyboardSize.height
         }
     }
-}
-
-@objc func keyboardWillHide(notification: NSNotification) {
-    if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-        
-            self.view.frame.origin.y += keyboardSize.height
-        
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+            scrollViewBottomLayout.constant = 0
     }
-}
 
 }
